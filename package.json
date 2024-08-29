@@ -1,0 +1,27 @@
+{
+  "name": "proyecto7",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js",
+    "albumseed": "node ./src/utils/seeds/album.seed.js",
+    "generoseed": "node ./src/utils/seeds/genero.seed.js",
+    "gruposeed": "node ./src/utils/seeds/grupo.seed.js",
+    "solistaseed": "node ./src/utils/seeds/solista.seed.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "nodemon": "^3.1.4"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "mongodb": "^6.8.0",
+    "mongoose": "^8.6.0"
+  }
+}
