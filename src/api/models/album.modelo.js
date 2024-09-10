@@ -1,14 +1,14 @@
 const mongoose = require('mongoose')
 const albumSchema = new mongoose.Schema(
   {
-    Nombre: { type: String, require: true },
-    Imagen: { type: String, require: true },
-    Lanzaminto: { type: Number, require: true }
+    Nombre: { type: String, required: true },
+    Imagen: { type: String, required: true },
+    Lanzamiento: { type: Number, require: true }
   },
   {
     timestamps: true,
-    collation: 'Album'
+    collection: 'Album'
   }
 )
-const AlbumModel = mongoose.model('Album', albumSchema, 'Album')
-module.exports = AlbumModel
+const albumModel = mongoose.model('Album', albumSchema, 'Album')
+module.exports = albumModel

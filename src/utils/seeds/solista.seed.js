@@ -11,15 +11,15 @@ const solistaSemilla = async () => {
     for (const data of solistaData) {
       data.Album = data.Album.map((id) => {
         const trimmedId = id.trim()
+        console.log(`Revision ID: "${trimmedId}"`)
+
         if (!mongoose.Types.ObjectId.isValid(trimmedId)) {
-          throw new Error('Invalid ObjectId:${trimmedId')
+          throw new Error(`Invalid ObjectId: ${trimmedId}`)
         }
         return new mongoose.Types.ObjectId(trimmedId)
       })
       await solistaModel.updateOne(
         { Nombre: data.Nombre },
-        { Imagen: data.Imagen },
-        { Debut: data.Debut },
         { $set: data },
         { upsert: true }
       )

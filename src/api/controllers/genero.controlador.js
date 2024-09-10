@@ -2,9 +2,8 @@ const Genero = require('../models/genero.modelo')
 
 const getGenero = async (req, res, next) => {
   try {
-    const generoGrupo = await Genero.find().populate('Grupo')
-    const generoSolista = await Genero.find().populate('Solista')
-    return res.status(200).json(generoGrupo, generoSolista)
+    const genero = await Genero.find().populate('Grupo').populate('Solista')
+    return res.status(200).json(genero)
   } catch (error) {
     return res.status(400).json('Error en la solicitud del GET')
   }
@@ -12,9 +11,10 @@ const getGenero = async (req, res, next) => {
 const getGeneroByID = async (req, res, next) => {
   try {
     const { id } = req.params
-    const generoGrupo = await Genero.findById(id).populate('Genero')
-    const generoSolista = await Genero.findById(id).populate('Solsita')
-    return res.status(200).json(generoGrupo, generoSolista)
+    const genero = await Genero.findById(id)
+      .populate('Genero')
+      .populate('Solsita')
+    return res.status(200).json(genero)
   } catch (error) {
     return res.status(400).json('Error en la solicitud ID')
   }
@@ -22,8 +22,9 @@ const getGeneroByID = async (req, res, next) => {
 const getGeneroByNombre = async (req, res, next) => {
   try {
     const { Nombre } = req.params
-    const generoGrupo = await Genero.find({ Nombre }).populate('Grupo')
-    const generoSolista = await Genero.find({ Nombre }).populate('Solista')
+    const genero = await Genero.find({ Nombre })
+      .populate('Grupo')
+      .populate('Solista')
     return res.status(200).json(genero)
   } catch (error) {
     return res.status(400).json('Error en la solicitud NOMBRE')
@@ -34,7 +35,7 @@ const postGenero = async (req, res, next) => {
   try {
     const newgenero = new Genero(req.body)
     const generoSaved = await newgenero.save()
-    return res.status(201).json(generoSaved)
+    return res.status(200).json(generoSaved)
   } catch (error) {
     return res.status(400).json('Erron en la solicitud POST')
   }

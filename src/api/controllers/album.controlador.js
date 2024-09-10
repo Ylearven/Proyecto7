@@ -4,7 +4,7 @@ const getAlbum = async (req, res, next) => {
   try {
     const album = await Album.find()
     return res.status(200).json(album)
-  } catch (err) {
+  } catch (error) {
     return res.status(400).json('Error en la solicitud GET')
   }
 }
@@ -14,7 +14,7 @@ const getAlbumById = async (req, res, next) => {
     const album = await Album.findById(id)
     return res.status(200).json(album)
   } catch (error) {
-    return res.status(400).json('Error el la solicitud ID')
+    return res.status(400).json('Error en la solicitud ID')
   }
 }
 const getAlbumByNombre = async (req, res, next) => {
@@ -23,14 +23,14 @@ const getAlbumByNombre = async (req, res, next) => {
     const album = await Album.find({ Nombre })
     return res.status(200).json(album)
   } catch (error) {
-    return res.status(400).json('Error en la solucitud NOMBRE')
+    return res.status(400).json('Error en la solicitud NOMBRE')
   }
 }
 const getAlbumByLanzamiento = async (req, res, next) => {
   try {
     const { Lanzamiento } = req.params
     const album = await Album.find({
-      Lanzaminto: { $lte: Number(Lanzamiento) }
+      Lanzamiento: { $lte: Number(Lanzamiento) }
     })
     return res.status(200).json(album)
   } catch (error) {
@@ -41,19 +41,20 @@ const postAlbum = async (req, res, next) => {
   try {
     const newalbum = new Album(req.body)
     const albumSaved = await newalbum.save()
-    return res.status(201).json(albumSaved)
+    return res.status(200).json(albumSaved)
   } catch (error) {
-    return res.status(400).json('Error en la solicitud POST', error)
+    return res.status(400).json('Error en la solicitud POST')
   }
 }
 const putAlbum = async (req, res, next) => {
   try {
     const { id } = req.params
-    const newalbum = new Medallero(req.body)
-    newalbum._id = id
-    const albumUpdated = await Album.findByIdAndUpdate(id, newalbum, {
-      new: true
-    })
+    const updates = req.body
+    const albumUpdated = await Album.findByIdAndUpdate(
+      id,
+      { $set: updates },
+      { new: true }
+    )
     return res.status(200).json(albumUpdated)
   } catch (error) {
     return res.status(400).json('Error en la solicitud PUT')
@@ -68,17 +69,17 @@ const deleteAlbum = async (req, res, next) => {
     return res.status(400).json('Error en la solicitud DELETE')
   }
 }
-const updateAlbum = async (req, res, next) => {
+const UpdateAlbum = async (req, res, next) => {
   try {
     const { id } = req.params
     const newalbum = new Album(req.body)
     newalbum._id = id
-    const AlbumUpdated = await Album.findByIdAndUpdate(id, newalbum, {
+    const albumUpdated = await Album.findByIdAndUpdate(id, newalbum, {
       new: true
     })
-    return res.status(200).json(AlbumUpdated)
+    return res.status(200).json(albumUpdated)
   } catch (error) {
-    return res.status(400).json('Error en el UPDATE')
+    return res.status(400).json('Error en UPDATE')
   }
 }
 module.exports = {
@@ -89,5 +90,5 @@ module.exports = {
   postAlbum,
   putAlbum,
   deleteAlbum,
-  updateAlbum
+  UpdateAlbum
 }

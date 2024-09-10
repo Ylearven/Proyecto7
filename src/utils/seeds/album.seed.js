@@ -1,18 +1,16 @@
-const { mongoose } = require('mongoose')
 const albumData = require('../../data/album.data')
-const albumModel = require('../../data/album.data')
-
+const albumModel = require('../../api/models/album.modelo')
+const mongoose = require('mongoose')
 const albumSemilla = async () => {
   try {
     await mongoose.connect(
       'mongodb+srv://ylegood:61IhtEUISdArhyrJ@cluster0.tpwln.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0'
     )
-    console.log('Conectado al Mongo')
+    console.log('conectado a Mongo')
     for (const data of albumData) {
-      await albumModel.updateOne(
+      await albumData.updateOne(
         { Nombre: data.Nombre },
-        { Imagen: data.Imagen },
-        { Lanzamineto: data.Lanzamiento },
+        { Lanzamiento: data.Lanzamiento },
         { $set: data },
         { upsert: true }
       )
@@ -22,7 +20,7 @@ const albumSemilla = async () => {
     console.log('Error en AlbumSeeds', error)
   } finally {
     await mongoose.disconnect()
-    console.log('Desconectado del BBDD')
+    console.log('Desconectado de la BBDD')
   }
 }
 albumSemilla()
