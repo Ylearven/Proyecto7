@@ -39,6 +39,11 @@ const getAlbumByLanzamiento = async (req, res, next) => {
 }
 const postAlbum = async (req, res, next) => {
   try {
+    const { Nombre } = req.body
+    const albumExiste = await Album.findOne({ Nombre })
+    if (albumExiste) {
+      return res.status(400).json('Ya existe este album')
+    }
     const newalbum = new Album(req.body)
     const albumSaved = await newalbum.save()
     return res.status(200).json(albumSaved)
@@ -50,11 +55,22 @@ const putAlbum = async (req, res, next) => {
   try {
     const { id } = req.params
     const updates = req.body
+    const { Nombre } = req.body
+    const albumExiste = await Album.findOne({
+      _id: { $ne: id },
+      Nombre
+    })
+    if (albumExiste) {
+      return res.status(400).json('Ya existe el Album')
+    }
     const albumUpdated = await Album.findByIdAndUpdate(
       id,
       { $set: updates },
       { new: true }
     )
+    if (!albumUpdated) {
+      return res.status(404).json('Álbum no encontrado')
+    }
     return res.status(200).json(albumUpdated)
   } catch (error) {
     return res.status(400).json('Error en la solicitud PUT')
@@ -72,8 +88,15 @@ const deleteAlbum = async (req, res, next) => {
 const UpdateAlbum = async (req, res, next) => {
   try {
     const { id } = req.params
-    const newalbum = new Album(req.body)
-    newalbum._id = id
+    const updates = req.body
+    const { Nombre } = req.body
+    const albumExiste = await Album.findOne({
+      _id: { $ne: id },
+      Nombre
+    })
+    if (albumExiste) {
+      return res.status(400).json('Ya existe el album')
+    }
     const albumUpdated = await Album.findByIdAndUpdate(id, newalbum, {
       new: true
     })

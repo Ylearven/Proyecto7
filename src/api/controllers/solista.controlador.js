@@ -37,6 +37,11 @@ const getSolistaByDebut = async (req, res, next) => {
 }
 const postSolista = async (req, res, next) => {
   try {
+    const { Nombre } = req.body
+    const solistaExiste = await Solista.findOne({ Nombre })
+    if (solistaExiste) {
+      return res.status(400).json('El solista ya existe')
+    }
     const newsolista = new Solista(req.body)
     const solistaSaved = await newsolista.save()
     return res.status(201).json(solistaSaved)
@@ -48,6 +53,16 @@ const putSolista = async (req, res, next) => {
   try {
     const { id } = req.params
     const updates = req.body
+    if (updates.Solista && updates.Solista.length) {
+      const solista = await Solista.findById(id)
+      if (!solista) {
+        return res.status(404).json('Solista no encontrado')
+      }
+      const solistaSet = new Set(Solista.Album.map(String))
+      updates.Solista.forEach((item) => solistaSet.add(String(item)))
+      updates.Solista = Array.from(solistaSet)
+    }
+
     const solistaUpdated = await Solista.findByIdAndUpdate(
       id,
       { $set: updates },
@@ -73,6 +88,15 @@ const Updatesolista = async (req, res, next) => {
     const { id } = req.params
     const newsolista = new Solista(req.body)
     newsolista._id = id
+    if (newsolista.Album && newsolista.Album.length) {
+      const solista = await Solista.findById(id)
+      if (!solista) {
+        return res.status(404).json('Solista no encontrado')
+      }
+      const solistaSet = new Set(Solista.Album.map(String))
+      newsolista.Album.forEach((item) => solistaSet.add(String(item)))
+      newsolista.Album = Array.from(solistaSet)
+    }
     const solistaUpdated = await Solista.findByIdAndUpdate(id, newsolista, {
       new: true
     })

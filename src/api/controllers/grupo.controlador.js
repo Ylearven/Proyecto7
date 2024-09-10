@@ -46,6 +46,11 @@ const getGrupoByComponentes = async (req, res, next) => {
 }
 const postGrupo = async (req, res, next) => {
   try {
+    const { Nombre } = req.body
+    const grupoExiste = await Grupo.findOne({ Nombre })
+    if (grupoExiste) {
+      return res.status(400).json('El grupo ya existe')
+    }
     const newgrupo = new Grupo(req.body)
     const grupoSaved = await newgrupo.save()
     return res.status(201).json(grupoSaved)
@@ -57,6 +62,16 @@ const putGrupo = async (req, res, next) => {
   try {
     const { id } = req.params
     const updates = req.body
+    if (updates.Grupo && updates.Grupo.length) {
+      const grupo = await Grupo.findById(id)
+      if (!grupo) {
+        return res.status(404).json('Grupo no encontrado')
+      }
+      const grupoSet = new Set(Grupo.Album.map(String))
+      updates.Grupo.forEach((item) => grupoSet.add(String(item)))
+      updates.Grupo = Array.from(grupoSet)
+    }
+
     const grupoUpdated = await Grupo.findByIdAndUpdate(
       id,
       { $set: updates },
@@ -82,6 +97,16 @@ const UpdateGrupo = async (req, res, next) => {
     const { id } = req.params
     const newgrupo = new Grupo(req.body)
     newgrupo._id = id
+    if (newgrupo.Album && newgrupo.Album.length) {
+      const grupo = await Grupo.findById(id)
+      if (!grupo) {
+        return res.status(404).json('Grupo no encontrado')
+      }
+      const grupoSet = new Set(Grupo.Album.map(String))
+      newgrupo.Album.forEach((item) => grupoSet.add(String(item)))
+      newgrupo.Album = Array.from(grupoSet)
+    }
+
     const grupoUpdated = await Grupo.findByIdAndUpdate(id, newgrupo, {
       new: true
     })
