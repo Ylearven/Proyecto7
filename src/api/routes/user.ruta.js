@@ -1,12 +1,18 @@
-const { isAuth } = require('../../middlewares/auth')
+const userRouter = require('express').Router()
+const { isAdmin, isAuth } = require('../../middlewares/auth')
 const {
   getUser,
   registerUser,
-  loginUser
+  loginUser,
+  updateRolUser,
+  updateUser,
+  deleteUser
 } = require('../controllers/users.controlador')
-const userRouter = require('express').Router()
 
-userRouter.get('/', [isAuth], getUser)
-userRouter.post('/registerUser', registerUser)
-userRouter.post('/loginUser', loginUser)
+userRouter.get('/', isAdmin, isAuth, getUser)
+userRouter.post('/register', registerUser)
+userRouter.post('/login', loginUser)
+userRouter.put('/role/:userId', isAdmin, isAuth, updateRolUser)
+userRouter.put('/:userId', isAdmin, isAuth, updateUser)
+userRouter.delete('/:userId', isAdmin, isAuth, deleteUser)
 module.exports = userRouter

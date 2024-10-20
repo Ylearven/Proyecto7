@@ -2,11 +2,10 @@ const mongoose = require('mongoose')
 const bcrypt = require('bcrypt')
 const userSchema = new mongoose.Schema(
   {
-    userName: { type: String, required: true },
+    userName: { type: String, required: true, unique: true },
     password: { type: String, required: true },
     rol: {
       type: String,
-      required: true,
       enum: ['admin', 'user'],
       default: 'user'
     }
@@ -16,8 +15,12 @@ const userSchema = new mongoose.Schema(
     collection: 'Usuario'
   }
 )
-userSchema.pre('save', function () {
+userSchema.pre('save', function (next) {
+  if (!this.isModified('password')) return next()
+
+  //Encriptar la contraseña
   this.password = bcrypt.hashSync(this.password, 10)
+  next()
 })
 const UserModel = mongoose.model('Usuario', userSchema, 'Usuario')
 module.exports = UserModel

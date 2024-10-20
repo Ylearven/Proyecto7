@@ -1,5 +1,6 @@
 require('dotenv').config()
 const express = require('express')
+const cors = require('cors')
 
 const { connectDB } = require('./src/config/db')
 
@@ -7,11 +8,8 @@ const albumRouter = require('./src/api/routes/album.ruta')
 const generoRouter = require('./src/api/routes/genero.ruta')
 const grupoRouter = require('./src/api/routes/grupo.ruta')
 const solistaRouter = require('./src/api/routes/solista.ruta')
-
 const userRouter = require('./src/api/routes/user.ruta')
-
 const app = express()
-const cors = require('cors')
 
 app.use(express.json())
 app.use(cors())
@@ -21,7 +19,7 @@ app.use('/api/v1/albumRouter', albumRouter)
 app.use('/api/v1/generoRouter', generoRouter)
 app.use('/api/v1/grupoRouter', grupoRouter)
 app.use('/api/v1/solistaRouter', solistaRouter)
-app.use('/api/v1/userRouter', userRouter)
+app.use('/api/v1/users', userRouter)
 
 app.use('*', (req, res, next) => {
   return res.status(404).json('Route not found')
