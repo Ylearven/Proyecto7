@@ -1,22 +1,5 @@
 const Album = require('../models/album.modelo')
 
-const getAlbum = async (req, res, next) => {
-  try {
-    const album = await Album.find()
-    return res.status(200).json(album)
-  } catch (error) {
-    return res.status(400).json('Error en la solicitud GET')
-  }
-}
-const getAlbumById = async (req, res, next) => {
-  try {
-    const { id } = req.params
-    const album = await Album.findById(id)
-    return res.status(200).json(album)
-  } catch (error) {
-    return res.status(400).json('Error en la solicitud ID')
-  }
-}
 const getAlbumByNombre = async (req, res, next) => {
   try {
     const { Nombre } = req.params
@@ -35,6 +18,23 @@ const getAlbumByLanzamiento = async (req, res, next) => {
     return res.status(200).json(album)
   } catch (error) {
     return res.status(400).json('Error en la solicitud LANZAMIENTO')
+  }
+}
+const getAlbumById = async (req, res, next) => {
+  try {
+    const { id } = req.params
+    const album = await Album.findById(id)
+    return res.status(200).json(album)
+  } catch (error) {
+    return res.status(400).json('Error en la solicitud ID')
+  }
+}
+const getAlbum = async (req, res, next) => {
+  try {
+    const album = await Album.find()
+    return res.status(200).json(album)
+  } catch (error) {
+    return res.status(400).json('Error en la solicitud GET')
   }
 }
 const postAlbum = async (req, res, next) => {
