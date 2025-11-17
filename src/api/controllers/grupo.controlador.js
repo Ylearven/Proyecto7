@@ -58,30 +58,6 @@ const postGrupo = async (req, res, next) => {
     return res.status(400).json('Erron en la solicitud POST')
   }
 }
-const putGrupo = async (req, res, next) => {
-  try {
-    const { id } = req.params
-    const updates = req.body
-    if (updates.Grupo && updates.Grupo.length) {
-      const grupo = await Grupo.findById(id)
-      if (!grupo) {
-        return res.status(404).json('Grupo no encontrado')
-      }
-      const grupoSet = new Set(Grupo.Album.map(String))
-      updates.Grupo.forEach((item) => grupoSet.add(String(item)))
-      updates.Grupo = Array.from(grupoSet)
-    }
-
-    const grupoUpdated = await Grupo.findByIdAndUpdate(
-      id,
-      { $set: updates },
-      { new: true, runValidators: true }
-    )
-    return res.status(200).json(grupoUpdated)
-  } catch (error) {
-    return res.status(400).json('Error en la solicitud PUT')
-  }
-}
 
 const deleteGrupo = async (req, res, next) => {
   try {

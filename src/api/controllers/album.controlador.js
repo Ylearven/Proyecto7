@@ -51,31 +51,6 @@ const postAlbum = async (req, res, next) => {
     return res.status(400).json('Error en la solicitud POST')
   }
 }
-const putAlbum = async (req, res, next) => {
-  try {
-    const { id } = req.params
-    const updates = req.body
-    const { Nombre } = req.body
-    const albumExiste = await Album.findOne({
-      _id: { $ne: id },
-      Nombre
-    })
-    if (albumExiste) {
-      return res.status(400).json('Ya existe el Album')
-    }
-    const albumUpdated = await Album.findByIdAndUpdate(
-      id,
-      { $set: updates },
-      { new: true }
-    )
-    if (!albumUpdated) {
-      return res.status(404).json('Álbum no encontrado')
-    }
-    return res.status(200).json(albumUpdated)
-  } catch (error) {
-    return res.status(400).json('Error en la solicitud PUT')
-  }
-}
 const deleteAlbum = async (req, res, next) => {
   try {
     const { id } = req.params
@@ -111,7 +86,6 @@ module.exports = {
   getAlbumByNombre,
   getAlbumByLanzamiento,
   postAlbum,
-  putAlbum,
   deleteAlbum,
   UpdateAlbum
 }

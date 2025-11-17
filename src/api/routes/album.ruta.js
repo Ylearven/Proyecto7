@@ -4,8 +4,8 @@ const {
   getAlbumByNombre,
   getAlbumByLanzamiento,
   postAlbum,
-  putAlbum,
-  deleteAlbum
+  deleteAlbum,
+  UpdateAlbum
 } = require('../controllers/album.controlador')
 
 const albumRouter = require('express').Router()
@@ -15,7 +15,7 @@ albumRouter.get('/lanzamiento/:lanzamiento', getAlbumByLanzamiento)
 albumRouter.get('/:id', getAlbumById)
 albumRouter.get('/', getAlbum)
 albumRouter.post('/', postAlbum)
-albumRouter.put('/:id', putAlbum)
+albumRouter.put('/:id', UpdateAlbum)
 albumRouter.delete('/:id', deleteAlbum)
 
 module.exports = albumRouter
