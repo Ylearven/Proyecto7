@@ -1,12 +1,11 @@
 const { mongoose } = require('mongoose')
 const generoData = require('../../data/genero.data')
 const generoModel = require('../../data/genero.data')
+require('dotenv').config()
 
 const generoSemilla = async () => {
   try {
-    await mongoose.connect(
-      'mongodb+srv://ylegood:61IhtEUISdArhyrJ@cluster0.tpwln.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0'
-    )
+    await mongoose.connect(process.env.DB_URL)
     console.log('Conectado al Mongo')
     for (const data of generoData) {
       data.grupoModel = data.Grupo.map((id) => {

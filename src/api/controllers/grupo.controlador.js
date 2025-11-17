@@ -95,21 +95,21 @@ const deleteGrupo = async (req, res, next) => {
 const UpdateGrupo = async (req, res, next) => {
   try {
     const { id } = req.params
-    const newgrupo = new Grupo(req.body)
-    newgrupo._id = id
-    if (newgrupo.Album && newgrupo.Album.length) {
+    const updates = req.body
+    if (updates.Album && updates.Album.length) {
       const grupo = await Grupo.findById(id)
       if (!grupo) {
         return res.status(404).json('Grupo no encontrado')
       }
-      const grupoSet = new Set(Grupo.Album.map(String))
-      newgrupo.Album.forEach((item) => grupoSet.add(String(item)))
-      newgrupo.Album = Array.from(grupoSet)
+      const albumSet = new Set(grupo.Album.map((id) => id.toString()))
+      updates.Album.forEach((id) => albumSet.add(id.toString()))
+      updates.Album = Array.from(albumSet)
     }
-
-    const grupoUpdated = await Grupo.findByIdAndUpdate(id, newgrupo, {
-      new: true
-    })
+    const grupoUpdated = await Grupo.findByIdAndUpdate(
+      id,
+      { $set: updates },
+      { new: true, runValidators: true }
+    )
     return res.status(200).json(grupoUpdated)
   } catch (error) {
     return res.status(400).json('Error en UPDATE')
@@ -121,7 +121,6 @@ module.exports = {
   getGrupoByNombre,
   getGrupoByDebut,
   getGrupoByComponentes,
-  putGrupo,
   postGrupo,
   deleteGrupo,
   UpdateGrupo

@@ -1,26 +1,28 @@
-const { mongoose } = require('mongoose')
+const mongoose = require('mongoose')
 const grupoData = require('../../data/grupo.data')
 const grupoModel = require('../../data/grupo.data')
+require('dotenv').config()
 
 const grupoSemilla = async () => {
   try {
-    await mongoose.connect(
-      'mongodb+srv://ylegood:61IhtEUISdArhyrJ@cluster0.tpwln.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0'
-    )
+    await mongoose.connect(process.env.DB_URL)
     console.log('Conectado al Mongo')
+
     for (const data of grupoData) {
-      data.albumModel = data.Album.map((id) => {
-        const trimmedId = id.trim()
-        if (!mongoose.Types.ObjectId.isValid(trimmedId)) {
-          throw new Error('Invalid ObjectId:${trimmedId')
-        }
-        return new mongoose.Types.ObjectId(trimmedId)
-      })
+      if (data.Album && data.Album.length) {
+        data.Album = data.Album.map((id) => {
+          const trimmedId = id.trim()
+          if (!mongoose.Types.ObjectId.isValid(trimmedId)) {
+            throw new Error(`Invalid ObjectId:${trimmedId}`)
+          }
+          return new mongoose.Types.ObjectId(trimmedId)
+        })
+      }
       await grupoModel.updateOne(
         { Nombre: data.Nombre },
-        { Imagen: data.Imagen },
+        /* { Imagen: data.Imagen },
         { Componentes: data.Componentes },
-        { Debut: data.Debut },
+        { Debut: data.Debut }, */
         { $set: data },
         { upsert: true }
       )

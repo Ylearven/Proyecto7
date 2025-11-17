@@ -3,18 +3,20 @@ const { verifyJwt } = require('../config/jwt')
 
 const isAuth = async (req, res, next) => {
   try {
-    const token = req.headers.authorization
+    const token = req.headers.authorization?.replace('Bearer', '')
     if (!token) {
       return res.status(401).json('Autorización requerida')
     }
-    const parsedToken = token.replace('Bearer ', '')
-    const { id } = verifyJwt(parsedToken)
-
-    const user = await User.findById(id)
+    const decoded = verifyJwt(token)
+    if (!decoded?.id) {
+      return res.status(401).json({ message: 'Autorización no válida' })
+    }
+    const user = await User.findById(decoded.id).lean()
     if (!user) {
       return res.status(404).json('Usuario no encontrado')
     }
-    req.user = { ...user._doc, password: null }
+    const { password, ...userSafe } = user
+    req.user = userSafe
     next()
   } catch (error) {
     return res.status(400).json('No estás autorizado auth')
@@ -23,15 +25,16 @@ const isAuth = async (req, res, next) => {
 
 const isAdmin = async (req, res, next) => {
   try {
-    const token = req.headers.authorization
+    const token = req.headers.authorization?.replace('Bearer', '')
     if (!token) {
       return res.status(401).json('Autorización requerida, no token provided')
     }
-    const parsedToken = token.replace('Bearer ', '')
-    const decoded = verifyJwt(parsedToken)
-    /* const { id } = verifyJwt(parsedToken)  */
+    const decoded = verifyJwt(token)
+    if (!decoded?.id) {
+      return res.status(401).json({ message: 'Token invalido' })
+    }
 
-    const user = await User.findById(decoded.id)
+    const user = await User.findById(decoded.id).lean()
     if (!user) {
       return res.status(404).json('Usuario no encontrado')
     }
@@ -39,9 +42,10 @@ const isAdmin = async (req, res, next) => {
     if (user.rol !== 'admin') {
       return res.status(403).json('Accion permitida solo a administradores')
     }
+    req.user = user
     next()
   } catch (error) {
-    return res.status(400).json('No estás autorizado Admin')
+    return res.status(400).json('No estás autorizado como Admin')
   }
 }
 

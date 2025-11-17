@@ -11,27 +11,19 @@ const getUser = async (req, res, next) => {
   }
 }
 
-const buscarUsuario = async (userName) => {
-  try {
-    const user = await User.findOne({ userName })
-    return user
-  } catch (error) {
-    return res.status(400).json('ERROR en buscar Usuario')
-  }
-}
-
 const registerUser = async (req, res, next) => {
   try {
-    const { userName, password, rol } = req.body
+    const { userName, password } = req.body
 
-    const duplicadoUser = await buscarUsuario(userName)
-    if (duplicadoUser) {
+    const UserExiste = await User.findOne({ userName })
+    if (UserExiste) {
       return res.status(400).json({ message: 'Nombre de usuario ocupado' })
     }
+    const hashedPassword = bcrypt.hashSync(password, 10)
     const nuevoUser = new User({
       userName,
-      password,
-      rol: rol || 'user'
+      password: hashedPassword,
+      rol: 'user'
     })
 
     const guardarUser = await nuevoUser.save()
@@ -44,28 +36,29 @@ const registerUser = async (req, res, next) => {
 const loginUser = async (req, res, next) => {
   try {
     const { userName, password } = req.body
-    const user = await buscarUsuario(userName)
+    const user = await User.findOne({ userName })
     if (!user) {
       return res.status(400).json({ message: 'El usuario no existe' })
     }
     const passwordMatch = bcrypt.compareSync(password, user.password)
-    if (passwordMatch) {
-      const token = generateSign(user._id)
-      return res.status(200).json({ user, token })
-    } else {
+    if (!passwordMatch) {
       return res.status(400).json('Constraseña incorrecta')
     }
+    const token = generateSign(user._id)
+    return res.status(200).json({ user, token })
   } catch (error) {
     return res.status(400).json('Error en el LOGIN')
   }
 }
 
 const updateRolUser = async (req, res, next) => {
-  const { userId } = req.params
-  const { role } = req.body
   try {
-    if (!['admin', 'user'].includes(role)) {
-      return res.status(400).json({ message: 'Rol inválido' })
+    const { userId } = req.params
+    const { role } = req.body
+    if (req.user.rol !== 'admin') {
+      return res
+        .status(403)
+        .json({ message: 'Solo un admin puede cambiar roles' })
     }
     const user = await User.findById(userId)
     if (!user) {
@@ -75,24 +68,21 @@ const updateRolUser = async (req, res, next) => {
     await user.save()
     return res.status(200).json({ message: 'Rol actualizado' })
   } catch (error) {
-    return res.status(400).json('Error en la actualización de rol')
+    return res.status(404).json({ message: 'Error al actualizar el rol' })
   }
 }
 
 const updateUser = async (req, res, next) => {
-  const { userId } = req.params
-  const { userName, password } = req.body
   try {
+    const { userId } = req.params
+    const { userName, password } = req.body
     const user = await User.findById(userId)
     if (!user) {
       return res.status(404).json('Usuario no encontrado')
     }
-    if (userName) {
-      user.userName = userName
-    }
-    if (password) {
-      user.password = bcrypt.hashSync(password, 10)
-    }
+    if (userName) user.userName = userName
+    if (password) user.password = bcrypt.hashSync(password, 10)
+
     await user.save()
     return res.status(200).json('Usuario actualizado')
   } catch (error) {
@@ -101,12 +91,21 @@ const updateUser = async (req, res, next) => {
 }
 const deleteUser = async (req, res, next) => {
   const { userId } = req.params
+  const requester = req.user
   try {
-    const user = await User.findByIdAndDelete(userId)
-    if (!user) {
-      return res.status(404).json('Usuario no encontrado')
+    const userToDelete = await User.findById(userId)
+    if (!userToDelete) {
+      return res.status(404).json({ message: 'Usuario no encontrado' })
     }
-    return res.status(200).json('Ususario eliminado')
+    const isAdmin = requester.rol === 'admin'
+    const isSelf = requester._id.toString() == userId
+    if (!isAdmin && !isSelf) {
+      return res
+        .status(403)
+        .json({ message: 'No autorizado para eliminar este usuario' })
+    }
+    await User.findByIdAndDelete(userId)
+    return res.status(200).json('Usuario eliminado')
   } catch (error) {
     return res.status(400).json('Error al eliminar', error)
   }

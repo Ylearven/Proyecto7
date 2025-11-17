@@ -1,12 +1,11 @@
 const { mongoose } = require('mongoose')
 const solistaData = require('../../data/solista.data')
 const solistaModel = require('../../data/solista.data')
+require('dotenv').config()
 
 const solistaSemilla = async () => {
   try {
-    await mongoose.connect(
-      'mongodb+srv://ylegood:61IhtEUISdArhyrJ@cluster0.tpwln.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0'
-    )
+    await mongoose.connect(process.env.DB_URL)
     console.log('Conectado al Mongo')
     for (const data of solistaData) {
       data.Album = data.Album.map((id) => {

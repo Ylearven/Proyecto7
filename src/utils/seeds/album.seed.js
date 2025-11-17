@@ -1,16 +1,16 @@
 const albumData = require('../../data/album.data')
 const albumModel = require('../../api/models/album.modelo')
 const mongoose = require('mongoose')
+require('dotenv').config()
+
 const albumSemilla = async () => {
   try {
-    await mongoose.connect(
-      'mongodb+srv://ylegood:61IhtEUISdArhyrJ@cluster0.tpwln.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0'
-    )
+    await mongoose.connect(process.env.DB_URL)
     console.log('conectado a Mongo')
     for (const data of albumData) {
       await albumData.updateOne(
         { Nombre: data.Nombre },
-        { Lanzamiento: data.Lanzamiento },
+        /* { Lanzamiento: data.Lanzamiento }, */
         { $set: data },
         { upsert: true }
       )
