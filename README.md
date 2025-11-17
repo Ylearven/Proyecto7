@@ -4,7 +4,7 @@ Recopilatorio musical es una base de datos donde se pueden encontrar artistas, g
 
 ---
 
-## 🛠 Tech
+## Tech
 
 Recopilatorio Musical utiliza las siguientes tecnologías:
 
@@ -16,7 +16,7 @@ Recopilatorio Musical utiliza las siguientes tecnologías:
 
 ---
 
-## 📦 Installation
+## Installation
 
 1. Clonar el repositorio:  
    **https://github.com/Ylearven/Proyecto7**
@@ -27,11 +27,9 @@ Recopilatorio Musical utiliza las siguientes tecnologías:
 
 ---
 
-# 📌 EndPoints
+# EndPoints
 
----
-
-# 👤 Usuarios
+# Usuarios
 
 1. **Obtener todos**  
    `GET /api/v1/users`
@@ -53,7 +51,7 @@ Recopilatorio Musical utiliza las siguientes tecnologías:
 
 ---
 
-# 💿 Álbum
+# Álbum
 
 1. Obtener todos los álbumes  
    `GET /api/v1/albumRouter`
@@ -78,7 +76,7 @@ Recopilatorio Musical utiliza las siguientes tecnologías:
 
 ---
 
-# 🎼 Géneros
+# Géneros
 
 1. Obtener todos  
    `GET /api/v1/generoRouter`
@@ -100,7 +98,7 @@ Recopilatorio Musical utiliza las siguientes tecnologías:
 
 ---
 
-# 🎤 Grupos
+# Grupos
 
 1. Obtener todos  
    `GET /api/v1/grupoRouter`
@@ -128,7 +126,7 @@ Recopilatorio Musical utiliza las siguientes tecnologías:
 
 ---
 
-# 🎙 Solistas
+# Solistas
 
 1. Obtener todos  
    `GET /api/v1/solistaRouter`
@@ -153,11 +151,9 @@ Recopilatorio Musical utiliza las siguientes tecnologías:
 
 ---
 
-# 🧱 Modelos
+# Modelos
 
----
-
-## 📀 Modelo - Álbum
+## Modelo - Álbum
 
 - **Nombre:** `String` — Nombre del álbum
 - **Imagen:** `String` — URL de la portada
@@ -165,7 +161,7 @@ Recopilatorio Musical utiliza las siguientes tecnologías:
 
 ---
 
-## 🎼 Modelo - Género
+## Modelo - Género
 
 - **Nombre:** `String` — Nombre del género
 - **Grupo:** `Array(ObjectID)` — Grupos relacionados
@@ -173,7 +169,7 @@ Recopilatorio Musical utiliza las siguientes tecnologías:
 
 ---
 
-## 🥁 Modelo - Grupo
+## Modelo - Grupo
 
 - **Nombre:** `String` — Nombre del grupo
 - **Imagen:** `String` — URL de la imagen
@@ -183,7 +179,7 @@ Recopilatorio Musical utiliza las siguientes tecnologías:
 
 ---
 
-## 🎤 Modelo - Solista
+## Modelo - Solista
 
 - **Nombre:** `String` — Nombre del solista
 - **Imagen:** `String` — URL de la imagen
