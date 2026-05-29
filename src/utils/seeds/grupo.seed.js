@@ -1,6 +1,6 @@
 const mongoose = require('mongoose')
 const grupoData = require('../../data/grupo.data')
-const grupoModel = require('../../data/grupo.data')
+const grupoModel = require('../../api/models/grupo.modelo')
 require('dotenv').config()
 
 const grupoSemilla = async () => {
@@ -20,9 +20,6 @@ const grupoSemilla = async () => {
       }
       await grupoModel.updateOne(
         { Nombre: data.Nombre },
-        /* { Imagen: data.Imagen },
-        { Componentes: data.Componentes },
-        { Debut: data.Debut }, */
         { $set: data },
         { upsert: true }
       )

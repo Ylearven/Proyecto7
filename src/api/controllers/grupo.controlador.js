@@ -68,7 +68,7 @@ const deleteGrupo = async (req, res, next) => {
     return res.status(400).json('Error en la solicitud DELETE')
   }
 }
-const UpdateGrupo = async (req, res, next) => {
+const updateGrupo = async (req, res, next) => {
   try {
     const { id } = req.params
     const updates = req.body
@@ -99,5 +99,5 @@ module.exports = {
   getGrupoByComponentes,
   postGrupo,
   deleteGrupo,
-  UpdateGrupo
+  updateGrupo
 }

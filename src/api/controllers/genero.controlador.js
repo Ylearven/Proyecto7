@@ -1,4 +1,5 @@
 const Genero = require('../models/genero.modelo')
+const { updateGrupo } = require('./grupo.controlador')
 
 const getGenero = async (req, res, next) => {
   try {
@@ -13,7 +14,7 @@ const getGeneroByID = async (req, res, next) => {
     const { id } = req.params
     const genero = await Genero.findById(id)
       .populate('Grupo')
-      .populate('Solita')
+      .populate('Solista')
     return res.status(200).json(genero)
   } catch (error) {
     return res.status(400).json('Error en la solicitud ID')
@@ -55,7 +56,7 @@ const deleteGenero = async (req, res, next) => {
     return res.status(400).json('Error en la solicitud DELETE')
   }
 }
-const UpdateGenero = async (req, res, next) => {
+const updateGenero = async (req, res, next) => {
   try {
     const { id } = req.params
     const updates = req.body
@@ -63,17 +64,19 @@ const UpdateGenero = async (req, res, next) => {
     if (!genero) {
       return res.status(404).json('Genero no encontrado')
     }
-    if (updates.Grupo && updates.Solista) {
-      const generoSet = new Set([
-        ...Genero.Grupo.map(String),
-        ...Genero.Solista.map(String),
-        ...updates.Grupo.map(String),
+    if (updates.Grupo) {
+      const grupoSet = new Set([
+        ...genero.Grupo.map(String),
+        ...updates.Grupo.map(String)
+      ])
+      updates.Grupo = Array.from(grupoSet)
+    }
+    if (updates.Solista) {
+      const solistaSet = new Set([
+        ...genero.Solista.map(String),
         ...updates.Solista.map(String)
       ])
-      newgenero.Grupo.forEach((item) => generoSet.add(String(item)))
-      newgenero.Solista.forEach((item) => generoSet.add(String(item)))
-      updates.Grupo = Array.from(generoSet)
-      updates.Solista = Array.from(generoSet)
+      updates.Solista = Array.from(solistaSet)
     }
     const generoUpdated = await Genero.findByIdAndUpdate(
       id,
@@ -93,5 +96,5 @@ module.exports = {
   getGeneroByNombre,
   postGenero,
   deleteGenero,
-  UpdateGenero
+  updateGenero
 }

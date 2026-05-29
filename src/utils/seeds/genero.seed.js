@@ -1,6 +1,6 @@
-const { mongoose } = require('mongoose')
+const mongoose = require('mongoose')
 const generoData = require('../../data/genero.data')
-const generoModel = require('../../data/genero.data')
+const generoModel = require('../../api/models/genero.modelo')
 require('dotenv').config()
 
 const generoSemilla = async () => {
@@ -11,14 +11,14 @@ const generoSemilla = async () => {
       data.grupoModel = data.Grupo.map((id) => {
         const trimmedId = id.trim()
         if (!mongoose.Types.ObjectId.isValid(trimmedId)) {
-          throw new Error('Invalid ObjectId:${trimmedId}')
+          throw new Error(`Invalid ObjectId:${trimmedId}`)
         }
         return new mongoose.Types.ObjectId(trimmedId)
       })
       data.solistaModel = data.Solista.map((id) => {
         const trimmedId = id.trim()
         if (!mongoose.Types.ObjectId.isValid(trimmedId)) {
-          throw new Error('Invalid ObjectId:${trimmedId')
+          throw new Error(`Invalid ObjectId:${trimmedId}`)
         }
         return new mongoose.Types.ObjectId(trimmedId)
       })
@@ -30,7 +30,7 @@ const generoSemilla = async () => {
     }
     console.log('Datos insertados o actualizados')
   } catch (error) {
-    console.log('Error en SolistaSeeds', error)
+    console.log('Error en generoSeeds', error)
   } finally {
     await mongoose.disconnect()
     console.log('Desconectado del BBDD')

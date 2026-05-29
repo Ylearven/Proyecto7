@@ -59,7 +59,7 @@ const deleteSolista = async (req, res, next) => {
     return res.status(400).json('Error en la solicitud DELETE')
   }
 }
-const Updatesolista = async (req, res, next) => {
+const updateSolista = async (req, res, next) => {
   try {
     const { id } = req.params
     const updates = req.body
@@ -91,5 +91,5 @@ module.exports = {
   getSolistaByDebut,
   postSolista,
   deleteSolista,
-  Updatesolista
+  updateSolista
 }

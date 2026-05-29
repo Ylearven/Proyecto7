@@ -1,5 +1,4 @@
 const Album = require('../models/album.modelo')
-
 const getAlbumByNombre = async (req, res, next) => {
   try {
     const { Nombre } = req.params
@@ -60,10 +59,9 @@ const deleteAlbum = async (req, res, next) => {
     return res.status(400).json('Error en la solicitud DELETE')
   }
 }
-const UpdateAlbum = async (req, res, next) => {
+const updateAlbum = async (req, res, next) => {
   try {
     const { id } = req.params
-    const updates = req.body
     const { Nombre } = req.body
     const albumExiste = await Album.findOne({
       _id: { $ne: id },
@@ -72,7 +70,7 @@ const UpdateAlbum = async (req, res, next) => {
     if (albumExiste) {
       return res.status(400).json('Ya existe el album')
     }
-    const albumUpdated = await Album.findByIdAndUpdate(id, newalbum, {
+    const albumUpdated = await Album.findByIdAndUpdate(id, req.body, {
       new: true
     })
     return res.status(200).json(albumUpdated)
@@ -87,5 +85,5 @@ module.exports = {
   getAlbumByLanzamiento,
   postAlbum,
   deleteAlbum,
-  UpdateAlbum
+  updateAlbum
 }

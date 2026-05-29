@@ -1,6 +1,6 @@
-const { mongoose } = require('mongoose')
+const mongoose = require('mongoose')
 const solistaData = require('../../data/solista.data')
-const solistaModel = require('../../data/solista.data')
+const solistaModel = require('../../api/models/solista.modelo')
 require('dotenv').config()
 
 const solistaSemilla = async () => {

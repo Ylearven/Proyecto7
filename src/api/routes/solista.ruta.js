@@ -1,4 +1,4 @@
-const { UpdateGrupo } = require('../controllers/grupo.controlador')
+const { updateGrupo } = require('../controllers/grupo.controlador')
 const {
   getSolista,
   getSolistaByID,
@@ -14,7 +14,7 @@ solistaRouter.get('/debut/:debut', getSolistaByDebut)
 solistaRouter.get('/:id', getSolistaByID)
 solistaRouter.get('/', getSolista)
 solistaRouter.post('/', postSolista)
-solistaRouter.put('/:id', UpdateGrupo)
+solistaRouter.put('/:id', updateGrupo)
 solistaRouter.delete('/:id', deleteSolista)
 
 module.exports = solistaRouter

@@ -8,7 +8,7 @@ const albumSemilla = async () => {
     await mongoose.connect(process.env.DB_URL)
     console.log('conectado a Mongo')
     for (const data of albumData) {
-      await albumData.updateOne(
+      await albumModel.updateOne(
         { Nombre: data.Nombre },
         /* { Lanzamiento: data.Lanzamiento }, */
         { $set: data },
