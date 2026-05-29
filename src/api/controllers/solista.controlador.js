@@ -68,8 +68,10 @@ const updateSolista = async (req, res, next) => {
       if (!solista) {
         return res.status(404).json('Solista no encontrado')
       }
-      const albumSet = new Set(solista.Album.map((id) => id.toString()))
-      updates.Album.forEach((id) => albumSet.add(id.toString()))
+      const albumSet = new Set(
+        solista.Album.map((albumId) => albumId.toString())
+      )
+      updates.Album.forEach((albumId) => albumSet.add(id.toString()))
       updates.Album = Array.from(albumSet)
     }
     const solistaUpdated = await Solista.findByIdAndUpdate(

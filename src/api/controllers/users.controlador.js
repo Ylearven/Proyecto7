@@ -14,9 +14,8 @@ const getUser = async (req, res, next) => {
 const registerUser = async (req, res, next) => {
   try {
     const { userName, password } = req.body
-
-    const UserExiste = await User.findOne({ userName })
-    if (UserExiste) {
+    const userExiste = await User.findOne({ userName })
+    if (userExiste) {
       return res.status(400).json({ message: 'Nombre de usuario ocupado' })
     }
     const hashedPassword = bcrypt.hashSync(password, 10)
@@ -42,7 +41,7 @@ const loginUser = async (req, res, next) => {
     }
     const passwordMatch = bcrypt.compareSync(password, user.password)
     if (!passwordMatch) {
-      return res.status(400).json('Constraseña incorrecta')
+      return res.status(400).json('Contraseña incorrecta')
     }
     const token = generateSign(user._id)
     return res.status(200).json({ user, token })
@@ -68,7 +67,7 @@ const updateRolUser = async (req, res, next) => {
     await user.save()
     return res.status(200).json({ message: 'Rol actualizado' })
   } catch (error) {
-    return res.status(404).json({ message: 'Error al actualizar el rol' })
+    return res.status(400).json({ message: 'Error al actualizar el rol' })
   }
 }
 
@@ -98,7 +97,7 @@ const deleteUser = async (req, res, next) => {
       return res.status(404).json({ message: 'Usuario no encontrado' })
     }
     const isAdmin = requester.rol === 'admin'
-    const isSelf = requester._id.toString() == userId
+    const isSelf = requester._id.toString() === userId
     if (!isAdmin && !isSelf) {
       return res
         .status(403)

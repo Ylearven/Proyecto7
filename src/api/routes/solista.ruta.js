@@ -5,7 +5,8 @@ const {
   getSolistaByNombre,
   getSolistaByDebut,
   postSolista,
-  deleteSolista
+  deleteSolista,
+  updateSolista
 } = require('../controllers/solista.controlador')
 
 const solistaRouter = require('express').Router()
@@ -14,7 +15,7 @@ solistaRouter.get('/debut/:debut', getSolistaByDebut)
 solistaRouter.get('/:id', getSolistaByID)
 solistaRouter.get('/', getSolista)
 solistaRouter.post('/', postSolista)
-solistaRouter.put('/:id', updateGrupo)
+solistaRouter.put('/:id', updateSolista)
 solistaRouter.delete('/:id', deleteSolista)
 
 module.exports = solistaRouter

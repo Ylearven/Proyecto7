@@ -17,10 +17,9 @@ const userSchema = new mongoose.Schema(
 )
 userSchema.pre('save', function (next) {
   if (!this.isModified('password')) return next()
-
   //Encriptar la contraseña
   this.password = bcrypt.hashSync(this.password, 10)
   next()
 })
-const UserModel = mongoose.model('Usuario', userSchema, 'Usuario')
+const UserModel = mongoose.model('Usuario', userSchema)
 module.exports = UserModel

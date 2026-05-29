@@ -55,7 +55,7 @@ const postGrupo = async (req, res, next) => {
     const grupoSaved = await newgrupo.save()
     return res.status(201).json(grupoSaved)
   } catch (error) {
-    return res.status(400).json('Erron en la solicitud POST')
+    return res.status(400).json('Error en la solicitud POST')
   }
 }
 
@@ -77,8 +77,8 @@ const updateGrupo = async (req, res, next) => {
       if (!grupo) {
         return res.status(404).json('Grupo no encontrado')
       }
-      const albumSet = new Set(grupo.Album.map((id) => id.toString()))
-      updates.Album.forEach((id) => albumSet.add(id.toString()))
+      const albumSet = new Set(grupo.Album.map((albumId) => albumId.toString()))
+      updates.Album.forEach((albumId) => albumSet.add(id.toString()))
       updates.Album = Array.from(albumSet)
     }
     const grupoUpdated = await Grupo.findByIdAndUpdate(

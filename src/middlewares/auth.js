@@ -3,7 +3,7 @@ const { verifyJwt } = require('../config/jwt')
 
 const isAuth = async (req, res, next) => {
   try {
-    const token = req.headers.authorization?.replace('Bearer', '')
+    const token = req.headers.authorization?.replace('Bearer ', ' ')
     if (!token) {
       return res.status(401).json('Autorización requerida')
     }
@@ -24,8 +24,12 @@ const isAuth = async (req, res, next) => {
 }
 
 const isAdmin = async (req, res, next) => {
-  try {
-    const token = req.headers.authorization?.replace('Bearer', '')
+  if (req.user?.rol !== 'admin') {
+    return res.status(403).json('Acción permitida solo a administradores')
+  }
+  next()
+  /* try {
+    const token = req.headers.authorization?.replace('Bearer ', ' ')
     if (!token) {
       return res.status(401).json('Autorización requerida, no token provided')
     }
@@ -46,7 +50,7 @@ const isAdmin = async (req, res, next) => {
     next()
   } catch (error) {
     return res.status(400).json('No estás autorizado como Admin')
-  }
+  } */
 }
 
 module.exports = { isAuth, isAdmin }

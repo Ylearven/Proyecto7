@@ -15,10 +15,10 @@ app.use(express.json())
 app.use(cors())
 connectDB()
 
-app.use('/api/v1/albumRouter', albumRouter)
-app.use('/api/v1/generoRouter', generoRouter)
-app.use('/api/v1/grupoRouter', grupoRouter)
-app.use('/api/v1/solistaRouter', solistaRouter)
+app.use('/api/v1/album', albumRouter)
+app.use('/api/v1/genero', generoRouter)
+app.use('/api/v1/grupo', grupoRouter)
+app.use('/api/v1/solista', solistaRouter)
 app.use('/api/v1/users', userRouter)
 
 app.use('*', (req, res, next) => {
